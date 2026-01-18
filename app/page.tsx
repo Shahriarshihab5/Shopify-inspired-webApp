@@ -1,184 +1,101 @@
 "use client";
 
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
-
 export default function Home() {
-  const [mounted, setMounted] = useState(false);
-  const { theme, setTheme, systemTheme, resolvedTheme } = useTheme();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Force update on theme change
-  useEffect(() => {
-    if (mounted && theme) {
-      console.log("Theme changed to:", theme);
-      console.log("Resolved theme:", resolvedTheme);
-      console.log("HTML class:", document.documentElement.className);
-    }
-  }, [theme, resolvedTheme, mounted]);
-
-  if (!mounted) {
-    return null;
-  }
-
-  const currentTheme = resolvedTheme || theme;
-  const isDark = currentTheme === "dark";
-
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        backgroundColor: isDark ? "#0a0a0a" : "#ffffff",
-        color: isDark ? "#ededed" : "#171717",
-        transition: "all 0.3s ease",
-      }}
-    >
-      <main className="flex flex-col items-center justify-center min-h-screen gap-8 p-8">
-        {/* Debug Panel */}
-        <div
-          style={{
-            position: "fixed",
-            top: "1rem",
-            right: "1rem",
-            backgroundColor: "#2563eb",
-            color: "white",
-            padding: "1rem",
-            borderRadius: "0.5rem",
-            fontSize: "0.75rem",
-            fontFamily: "monospace",
-            boxShadow: "0 4px 6px rgba(0,0,0,0.3)",
-            zIndex: 1000,
-          }}
-        >
-          <div>Theme: {theme}</div>
-          <div>System: {systemTheme}</div>
-          <div>Resolved: {resolvedTheme}</div>
-          <div>HTML class: {document.documentElement.className || "none"}</div>
-          <div>Current: {isDark ? "DARK" : "LIGHT"}</div>
-        </div>
-
-        <div className="text-center space-y-4">
-          <h1
-            style={{
-              fontSize: "3rem",
-              fontWeight: "bold",
-              color: isDark ? "#ffffff" : "#000000",
-            }}
-          >
-            🛍️ Shopify-Inspired Platform
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-950 dark:to-gray-900">
+      {/* Hero Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="text-center space-y-8">
+          {/* Main Heading with Gradient */}
+          <h1 className="text-6xl md:text-7xl font-extrabold">
+            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Build Your Dream Store
+            </span>
           </h1>
 
-          <p style={{ fontSize: "1.25rem" }}>
-            Current theme:{" "}
-            <span
-              style={{
-                fontWeight: "bold",
-                color: isDark ? "#60a5fa" : "#2563eb",
-              }}
-            >
-              {currentTheme}
-            </span>
+          {/* Subheading */}
+          <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            Create, manage, and scale your e-commerce business with StoreCraft's powerful platform
           </p>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
+            <button className="group px-10 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-bold text-lg shadow-2xl hover:shadow-blue-500/50 transform hover:scale-105 transition-all duration-300">
+              Get Started
+              <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">
+                →
+              </span>
+            </button>
+            <button className="px-10 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-white rounded-xl font-bold text-lg shadow-xl border-2 border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300">
+              Learn More
+            </button>
+          </div>
         </div>
+      </section>
 
-        <div style={{ display: "flex", gap: "1rem" }}>
-          <button
-            onClick={() => {
-              console.log("🌞 Clicking Light");
-              setTheme("light");
-            }}
-            style={{
-              padding: "1rem 2rem",
-              borderRadius: "0.5rem",
-              backgroundColor: "#e5e7eb",
-              color: "#111827",
-              fontWeight: "600",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "1rem",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            }}
-          >
-            ☀️ Light
-          </button>
+      {/* Features Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="grid md:grid-cols-3 gap-8">
+          {/* Feature 1 */}
+          <div className="group p-8 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-blue-500 dark:hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 transform hover:-translate-y-2">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <span className="text-4xl">🏪</span>
+            </div>
+            <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">
+              Easy Store Setup
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              Launch your store in minutes with our intuitive builder and pre-designed templates
+            </p>
+          </div>
 
-          <button
-            onClick={() => {
-              console.log("🌙 Clicking Dark");
-              setTheme("dark");
-            }}
-            style={{
-              padding: "1rem 2rem",
-              borderRadius: "0.5rem",
-              backgroundColor: "#1f2937",
-              color: "#ffffff",
-              fontWeight: "600",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "1rem",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            }}
-          >
-            🌙 Dark
-          </button>
+          {/* Feature 2 */}
+          <div className="group p-8 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-purple-500 dark:hover:border-purple-500 hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 transform hover:-translate-y-2">
+            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <span className="text-4xl">📊</span>
+            </div>
+            <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">
+              Analytics Dashboard
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              Track sales, orders, and customer insights in real-time with powerful analytics
+            </p>
+          </div>
 
-          <button
-            onClick={() => {
-              console.log("💻 Clicking System");
-              setTheme("system");
-            }}
-            style={{
-              padding: "1rem 2rem",
-              borderRadius: "0.5rem",
-              backgroundColor: "#2563eb",
-              color: "#ffffff",
-              fontWeight: "600",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "1rem",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            }}
-          >
-            💻 System
-          </button>
+          {/* Feature 3 */}
+          <div className="group p-8 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-green-500 dark:hover:border-green-500 hover:shadow-2xl hover:shadow-green-500/20 transition-all duration-300 transform hover:-translate-y-2">
+            <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <span className="text-4xl">🚀</span>
+            </div>
+            <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">
+              Scale with Ease
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              Grow from 1 to 1000 products seamlessly with our scalable infrastructure
+            </p>
+          </div>
         </div>
+      </section>
 
-        {/* Visual Test Box */}
-        <div
-          style={{
-            marginTop: "2rem",
-            padding: "2rem",
-            borderRadius: "1rem",
-            backgroundColor: isDark ? "#1f2937" : "#f3f4f6",
-            border: `4px solid ${isDark ? "#4b5563" : "#d1d5db"}`,
-            boxShadow: "0 10px 15px rgba(0,0,0,0.1)",
-            transition: "all 0.3s ease",
-          }}
-        >
-          <p
-            style={{
-              fontSize: "1.125rem",
-              fontWeight: "600",
-              color: isDark ? "#f9fafb" : "#111827",
-            }}
-          >
-            ✨ This box changes with theme
-          </p>
-          <p
-            style={{
-              fontSize: "0.875rem",
-              marginTop: "0.5rem",
-              opacity: 0.75,
-              color: isDark ? "#d1d5db" : "#6b7280",
-            }}
-          >
-            Current mode: {isDark ? "DARK 🌙" : "LIGHT ☀️"}
-          </p>
+      {/* Stats Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-12 shadow-2xl">
+          <div className="grid md:grid-cols-3 gap-8 text-center text-white">
+            <div>
+              <div className="text-5xl font-bold mb-2">10K+</div>
+              <div className="text-blue-100 text-lg">Active Stores</div>
+            </div>
+            <div>
+              <div className="text-5xl font-bold mb-2">$2M+</div>
+              <div className="text-blue-100 text-lg">Revenue Generated</div>
+            </div>
+            <div>
+              <div className="text-5xl font-bold mb-2">99.9%</div>
+              <div className="text-blue-100 text-lg">Uptime</div>
+            </div>
+          </div>
         </div>
-      </main>
+      </section>
     </div>
   );
 }
