@@ -12,8 +12,8 @@ export async function POST(req: NextRequest) {
     const existingUser = await usersCollection.findOne({ uid });
     if (existingUser) {
       return NextResponse.json(
-        { error: 'User already exists' },
-        { status: 400 }
+        { message: 'User already exists', user: existingUser },
+        { status: 200 }
       );
     }
     
@@ -22,27 +22,22 @@ export async function POST(req: NextRequest) {
       uid,
       email,
       name,
-      role,
+      role: role || 'merchant',
       createdAt: new Date(),
       updatedAt: new Date(),
     };
     
-    const result = await usersCollection.insertOne(newUser);
+    await usersCollection.insertOne(newUser);
     
-    // Return the user data (not just the insertedId)
     return NextResponse.json(
       { 
-        uid,
-        email,
-        name,
-        role,
-        createdAt: newUser.createdAt,
-        message: 'User created successfully'
+        message: 'User added to MongoDB successfully',
+        user: newUser
       },
       { status: 201 }
     );
   } catch (error: any) {
-    console.error('Signup error:', error);
+    console.error('Fix user error:', error);
     return NextResponse.json(
       { error: error.message },
       { status: 500 }

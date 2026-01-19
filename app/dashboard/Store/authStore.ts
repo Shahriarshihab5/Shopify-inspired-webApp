@@ -4,7 +4,6 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  User
 } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 
@@ -35,11 +34,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
   signup: async (email: string, password: string, role: UserRole) => {
     try {
       set({ error: null, loading: true });
-      
-      // Create Firebase user
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       
-      // Save user data to MongoDB
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -53,11 +49,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
       if (!response.ok) throw new Error('Failed to save user data');
       
       set({ 
-        user: { 
-          uid: userCredential.user.uid, 
-          email, 
-          role 
-        },
+        user: { uid: userCredential.user.uid, email, role },
         loading: false
       });
     } catch (error: any) {
@@ -69,11 +61,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
   login: async (email: string, password: string) => {
     try {
       set({ error: null, loading: true });
-      
-      // Sign in with Firebase
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       
-      // Fetch user data from MongoDB to get role
       const response = await fetch(`/api/auth/user/${userCredential.user.uid}`);
       const userData = await response.json();
       
@@ -104,7 +93,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         try {
-          // Fetch user data from MongoDB
           const response = await fetch(`/api/auth/user/${firebaseUser.uid}`);
           const userData = await response.json();
           
