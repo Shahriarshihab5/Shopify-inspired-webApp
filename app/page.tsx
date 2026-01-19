@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
@@ -25,9 +27,12 @@ export default function Home() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
-            <button className="px-6 md:px-10 py-2.5 md:py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg md:rounded-xl font-bold text-sm md:text-base shadow-lg hover:shadow-xl transition-all">
+            <Link
+              href="/dashboard"
+              className="px-6 md:px-10 py-2.5 md:py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg md:rounded-xl font-bold text-sm md:text-base shadow-lg hover:shadow-xl transition-all inline-block text-center"
+            >
               Get Started Free
-            </button>
+            </Link>
             <button className="px-6 md:px-10 py-2.5 md:py-3 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white rounded-lg md:rounded-xl font-bold text-sm md:text-base shadow-lg transition-all">
               Watch Demo
             </button>
