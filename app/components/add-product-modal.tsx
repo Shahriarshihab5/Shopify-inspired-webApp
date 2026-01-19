@@ -6,12 +6,26 @@ import { z } from "zod";
 import { X } from "lucide-react";
 import { useStore } from "../store/useStore";
 
+const MAX_FILE_SIZE = 2 * 1024 * 1024;
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
 // Validation Schema
 const productSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
   price: z.number().min(0.01, "Price must be greater than 0"),
   stock: z.number().int().min(0, "Stock cannot be negative"),
   category: z.string().min(2, "Category is required"),
+  image: z
+    .any()
+    .refine((fileList) => fileList && fileList.length === 1, "Image is required")
+    .refine(
+      (fileList) => fileList && ACCEPTED_IMAGE_TYPES.includes(fileList[0]?.type),
+      "Only JPG, PNG, WEBP images are allowed"
+    )
+    .refine(
+      (fileList) => fileList && fileList[0]?.size <= MAX_FILE_SIZE,
+      "Max file size is 2MB"
+    ),
 });
 
 type ProductFormData = z.infer<typeof productSchema>;
@@ -32,16 +46,32 @@ export default function AddProductModal({ onClose }: AddProductModalProps) {
   });
 
   const onSubmit = async (data: ProductFormData) => {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("price", String(data.price));
+    formData.append("stock", String(data.stock));
+    formData.append("category", data.category);
+    formData.append("image", data.image[0]);
+
+    const res = await fetch("/api/products", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!res.ok) {
+      // TODO: add toast/error UI
+      return;
+    }
+
+    const saved = await res.json();
 
     addProduct({
-      id: Date.now().toString(),
-      name: data.name,
-      price: data.price,
-      stock: data.stock,
-      category: data.category,
-      image: "/placeholder.jpg",
+      id: saved.id,
+      name: saved.name,
+      price: saved.price,
+      stock: saved.stock,
+      category: saved.category,
+      image: saved.image, // /uploads/...
     });
 
     onClose();
@@ -139,6 +169,24 @@ export default function AddProductModal({ onClose }: AddProductModalProps) {
             {errors.category && (
               <p className="mt-1 text-sm text-red-600 dark:text-red-400">
                 {errors.category.message}
+              </p>
+            )}
+          </div>
+
+          {/* Image */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+              Product Image
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              {...register("image")}
+              className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white"
+            />
+            {errors.image && (
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                {String(errors.image.message)}
               </p>
             )}
           </div>

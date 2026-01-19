@@ -2,13 +2,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDB } from "@/lib/mongodb";
 
-export async function GET(
-  _req: NextRequest,
-  { params }: { params: { uid: string } }
-) {
+export async function GET(request: NextRequest, context: { params: Promise<{ uid: string }> }) {
   try {
+    const { uid } = await context.params; // এখানে await লাগবে
+    console.log("🔎 API /auth/user hit with uid =", uid);
+
     const db = await getDB();
-    const user = await db.collection("users").findOne({ uid: params.uid });
+    console.log("📦 Using DB name:", db.databaseName);
+
+    const collections = await db.listCollections().toArray();
+    console.log("📚 Collections in DB:", collections.map((c) => c.name));
+
+    const user = await db.collection("users").findOne({ uid });
+    console.log("📄 findOne result:", user);
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });

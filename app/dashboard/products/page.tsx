@@ -29,7 +29,6 @@ export default function ProductsPage() {
 
   return (
     <div className="p-4 md:p-8 bg-white dark:bg-gray-950 min-h-full">
-      
       {/* Header - ADD TOP MARGIN FOR MOBILE MENU */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 md:gap-8 mb-4 md:mb-8 mt-12 md:mt-0">
         <div>
@@ -66,89 +65,87 @@ export default function ProductsPage() {
       {/* Products Grid - 1 col mobile, 2 col tablet, 3 col desktop */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
         {filteredProducts.length > 0 ? (
-          filteredProducts.map((product, index) => {
-            const gradients = [
-              "from-emerald-500 to-teal-600",
-              "from-teal-500 to-cyan-600",
-              "from-cyan-500 to-emerald-600",
-              "from-emerald-600 to-cyan-600",
-              "from-teal-600 to-emerald-600",
-            ];
-            const grad = gradients[index % 5];
-            return (
-              <div
-                key={product.id}
-                className="bg-white dark:bg-gray-900 rounded-lg md:rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden hover:shadow-xl transition-all group"
-              >
-                {/* Product Image */}
-                <div className={`h-32 md:h-48 bg-gradient-to-br ${grad} flex items-center justify-center`}>
-                  <Package className="w-12 h-12 md:w-16 md:h-16 text-white opacity-50" />
+          filteredProducts.map((product) => (
+            <div
+              key={product.id}
+              className="bg-white dark:bg-gray-900 rounded-lg md:rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden hover:shadow-xl transition-all group"
+            >
+              {/* Product Image */}
+              <div className="h-32 md:h-48 bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
+                {product.image ? (
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <Package className="w-12 h-12 md:w-16 md:h-16 text-gray-300" />
+                )}
+              </div>
+
+              {/* Product Info */}
+              <div className="p-3 md:p-6">
+                {/* Name & Category */}
+                <div className="mb-3">
+                  <h3 className="text-base md:text-xl font-black text-gray-900 dark:text-white mb-1 truncate">
+                    {product.name}
+                  </h3>
+                  <span className="inline-block px-2 md:px-3 py-0.5 md:py-1 bg-emerald-100 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 text-xs font-bold rounded-full">
+                    {product.category}
+                  </span>
                 </div>
 
-                {/* Product Info */}
-                <div className="p-3 md:p-6">
-                  {/* Name & Category */}
-                  <div className="mb-3">
-                    <h3 className="text-base md:text-xl font-black text-gray-900 dark:text-white mb-1 truncate">
-                      {product.name}
-                    </h3>
-                    <span className="inline-block px-2 md:px-3 py-0.5 md:py-1 bg-emerald-100 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 text-xs font-bold rounded-full">
-                      {product.category}
-                    </span>
+                {/* Price & Stock */}
+                <div className="flex items-center justify-between mb-3 md:mb-4">
+                  <div>
+                    <p className="text-lg md:text-2xl font-black text-gray-900 dark:text-white">
+                      ${product.price}
+                    </p>
+                    <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400">
+                      {product.stock} units
+                    </p>
                   </div>
-
-                  {/* Price & Stock */}
-                  <div className="flex items-center justify-between mb-3 md:mb-4">
-                    <div>
-                      <p className="text-lg md:text-2xl font-black text-gray-900 dark:text-white">
-                        ${product.price}
-                      </p>
-                      <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400">
-                        {product.stock} units
-                      </p>
-                    </div>
-                    <div
-                      className={`px-2 md:px-3 py-0.5 md:py-1 rounded-full text-xs font-bold ${
-                        product.stock > 20
-                          ? "bg-green-100 text-green-700 dark:bg-green-950/30 dark:text-green-400"
-                          : product.stock > 0
-                          ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-950/30 dark:text-yellow-400"
-                          : "bg-red-100 text-red-700 dark:bg-red-950/30 dark:text-red-400"
-                      }`}
-                    >
-                      {product.stock > 20
-                        ? "In Stock"
+                  <div
+                    className={`px-2 md:px-3 py-0.5 md:py-1 rounded-full text-xs font-bold ${
+                      product.stock > 20
+                        ? "bg-green-100 text-green-700 dark:bg-green-950/30 dark:text-green-400"
                         : product.stock > 0
-                        ? "Low"
-                        : "Out"}
-                    </div>
+                        ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-950/30 dark:text-yellow-400"
+                        : "bg-red-100 text-red-700 dark:bg-red-950/30 dark:text-red-400"
+                    }`}
+                  >
+                    {product.stock > 20
+                      ? "In Stock"
+                      : product.stock > 0
+                      ? "Low"
+                      : "Out"}
                   </div>
+                </div>
 
-                  {/* Action Buttons */}
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => setEditingProduct(product)}
-                      className="flex-1 flex items-center justify-center gap-1 md:gap-2 px-2 md:px-4 py-1.5 md:py-2 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition font-bold text-xs md:text-sm"
-                    >
-                      <Edit2 className="w-3 h-3 md:w-4 md:h-4" />
-                      <span className="hidden sm:inline">Edit</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        if (confirm(`Delete "${product.name}"?`)) {
-                          deleteProduct(product.id);
-                        }
-                      }}
-                      className="flex-1 flex items-center justify-center gap-1 md:gap-2 px-2 md:px-4 py-1.5 md:py-2 bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/40 transition font-bold text-xs md:text-sm"
-                    >
-                      <Trash2 className="w-3 h-3 md:w-4 md:h-4" />
-                      <span className="hidden sm:inline">Delete</span>
-                    </button>
-                  </div>
+                {/* Action Buttons */}
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setEditingProduct(product)}
+                    className="flex-1 flex items-center justify-center gap-1 md:gap-2 px-2 md:px-4 py-1.5 md:py-2 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition font-bold text-xs md:text-sm"
+                  >
+                    <Edit2 className="w-3 h-3 md:w-4 md:h-4" />
+                    <span className="hidden sm:inline">Edit</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (confirm(`Delete "${product.name}"?`)) {
+                        deleteProduct(product.id);
+                      }
+                    }}
+                    className="flex-1 flex items-center justify-center gap-1 md:gap-2 px-2 md:px-4 py-1.5 md:py-2 bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/40 transition font-bold text-xs md:text-sm"
+                  >
+                    <Trash2 className="w-3 h-3 md:w-4 md:h-4" />
+                    <span className="hidden sm:inline">Delete</span>
+                  </button>
                 </div>
               </div>
-            );
-          })
+            </div>
+          ))
         ) : (
           <div className="col-span-full text-center py-12 md:py-20">
             <Package className="w-12 h-12 md:w-16 md:h-16 text-gray-300 dark:text-gray-700 mx-auto mb-3 md:mb-4" />
