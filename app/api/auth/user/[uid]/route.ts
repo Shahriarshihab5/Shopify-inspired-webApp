@@ -1,42 +1,28 @@
-import { connectDB } from '@/lib/mongodb';
-import { NextRequest, NextResponse } from 'next/server';
+// app/api/auth/user/[uid]/route.ts
+import { NextRequest, NextResponse } from "next/server";
+import { getDB } from "@/lib/mongodb";
 
 export async function GET(
-  req: NextRequest,
+  _req: NextRequest,
   { params }: { params: { uid: string } }
 ) {
   try {
-    const uid = params.uid;
-    console.log('📡 Fetching user with UID:', uid);
-    
-    const db = await connectDB();
-    const usersCollection = db.collection('users');
-    
-    const user = await usersCollection.findOne({ uid });
-    console.log('🔍 User found in DB:', !!user);
-    
+    const db = await getDB();
+    const user = await db.collection("users").findOne({ uid: params.uid });
+
     if (!user) {
-      console.warn('❌ User not found in MongoDB for UID:', uid);
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
-    
-    console.log('✅ Returning user data');
-    
+
     return NextResponse.json({
       uid: user.uid,
       email: user.email,
-      name: user.name || 'User',
-      role: user.role || 'customer',
+      name: user.name,
+      role: user.role,
       createdAt: user.createdAt,
     });
-  } catch (error: any) {
-    console.error('❌ Get user error:', error.message);
-    return NextResponse.json(
-      { error: error.message || 'Failed to fetch user' },
-      { status: 500 }
-    );
+  } catch (error) {
+    console.error("GET /api/auth/user error", error);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
